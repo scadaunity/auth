@@ -5,7 +5,7 @@ use CodeIgniter\Session\Session;
 /**
  * Class MockSession
  *
- * Provides a safe way to test the Session class itself,
+ * Provides a safe way to test the Auth class itself,
  * that doesn't interact with the session or cookies at all.
  */
 class MockSession extends Session

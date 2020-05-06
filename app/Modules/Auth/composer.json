@@ -1,0 +1,43 @@
+{
+    "name":              "scadaunity/auth",
+    "description":       "Modulo de Autenticação para aplicativos desenvolvidos com o framework Codeigniter 4",
+    "version": "1.0.0",
+    "type":              "library",
+    "license":           "MIT",
+    "homepage":          "https://www.scadaunity.tk/modules/auth",
+    "keywords":          [
+        "scadaunity",
+        "auth",
+        "Codeigniter 4"
+    ],
+    "authors": [
+        {
+            "name":     "Paulo César Andrade Souza",
+            "email":    "scadaunity@gmail.com",
+            "homepage": "http://scadaunity.tk"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "DoctrineTest\\InstantiatorPerformance\\": "tests",
+            "DoctrineTest\\InstantiatorTest\\": "tests",
+            "DoctrineTest\\InstantiatorTestAsset\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2.x-dev"
+        }
+    }
+}

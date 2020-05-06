@@ -16,7 +16,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('Auth');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -35,9 +35,13 @@ $routes->get('/', 'Home::index');
 /**
  * Module Auth Routes
  */
-$routes->get('/login', 'Auth::login');
-$routes->get('/register', 'Auth::register');
-$routes->get('/forgot', 'Auth::forgot');
+$routes->group('/',function ($routes){
+    $routes->get('login', 'Auth::login');
+    $routes->get('register', 'Auth::register');
+    $routes->get('verify', 'Auth::confirmSignup');
+    $routes->get('forgot', 'Auth::forgot');
+    $routes->get('logout', 'Auth::logout');
+});
 
 /**
  * --------------------------------------------------------------------

@@ -47,6 +47,13 @@
 
 <!-- App functions and actions -->
 <script src="<?php echo base_url('assets/js/app.js') ?>"></script>
+
+<script>
+    window.setTimeout(function () {
+        $(".alert").alert('close');
+    }, 5000);
+</script>
+
 </body>
 
 

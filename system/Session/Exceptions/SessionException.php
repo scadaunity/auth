@@ -7,26 +7,26 @@ class SessionException extends FrameworkException implements ExceptionInterface
 {
 	public static function forMissingDatabaseTable()
 	{
-		return new static(lang('Session.missingDatabaseTable'));
+		return new static(lang('Auth.missingDatabaseTable'));
 	}
 
 	public static function forInvalidSavePath(string $path = null)
 	{
-		return new static(lang('Session.invalidSavePath', [$path]));
+		return new static(lang('Auth.invalidSavePath', [$path]));
 	}
 
 	public static function forWriteProtectedSavePath(string $path = null)
 	{
-		return new static(lang('Session.writeProtectedSavePath', [$path]));
+		return new static(lang('Auth.writeProtectedSavePath', [$path]));
 	}
 
 	public static function forEmptySavepath()
 	{
-		return new static(lang('Session.emptySavePath'));
+		return new static(lang('Auth.emptySavePath'));
 	}
 
 	public static function forInvalidSavePathFormat(string $path)
 	{
-		return new static(lang('Session.invalidSavePathFormat', [$path]));
+		return new static(lang('Auth.invalidSavePathFormat', [$path]));
 	}
 }

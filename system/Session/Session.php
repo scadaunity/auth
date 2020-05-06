@@ -43,7 +43,7 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * Implementation of CodeIgniter session container.
  *
- * Session configuration is done through session variables and cookie related
+ * Auth configuration is done through session variables and cookie related
  * variables in app/config/App.php
  */
 class Session implements SessionInterface
@@ -199,26 +199,26 @@ class Session implements SessionInterface
 	{
 		if (is_cli() && ENVIRONMENT !== 'testing')
 		{
-			$this->logger->debug('Session: Initialization under CLI aborted.');
+			$this->logger->debug('Auth: Initialization under CLI aborted.');
 
 			return;
 		}
 		elseif ((bool) ini_get('session.auto_start'))
 		{
-			$this->logger->error('Session: session.auto_start is enabled in php.ini. Aborting.');
+			$this->logger->error('Auth: session.auto_start is enabled in php.ini. Aborting.');
 
 			return;
 		}
 		elseif (session_status() === PHP_SESSION_ACTIVE)
 		{
-			$this->logger->warning('Session: Sessions is enabled, and one exists.Please don\'t $session->start();');
+			$this->logger->warning('Auth: Sessions is enabled, and one exists.Please don\'t $session->start();');
 
 			return;
 		}
 
 		if (! $this->driver instanceof \SessionHandlerInterface)
 		{
-			$this->logger->error("Session: Handler '" . $this->driver .
+			$this->logger->error("Auth: Handler '" . $this->driver .
 					"' doesn't implement SessionHandlerInterface. Aborting.");
 		}
 
@@ -260,7 +260,7 @@ class Session implements SessionInterface
 
 		$this->initVars();
 
-		$this->logger->info("Session: Class initialized using '" . $this->sessionDriverName . "' driver.");
+		$this->logger->info("Auth: Class initialized using '" . $this->sessionDriverName . "' driver.");
 
 		return $this;
 	}
@@ -418,7 +418,7 @@ class Session implements SessionInterface
 
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------
-	// Session Utility Methods
+	// Auth Utility Methods
 	//--------------------------------------------------------------------
 
 	/**
@@ -808,7 +808,7 @@ class Session implements SessionInterface
 	 * Sets new data into the session, and marks it as temporary data
 	 * with a set lifespan.
 	 *
-	 * @param string|array $data  Session data key or associative array of items
+	 * @param string|array $data  Auth data key or associative array of items
 	 * @param null         $value Value to store
 	 * @param integer      $ttl   Time-to-live in seconds
 	 */
@@ -824,8 +824,8 @@ class Session implements SessionInterface
 	 * Returns either a single piece of tempdata, or all temp data currently
 	 * in the session.
 	 *
-	 * @param  string $key Session data key
-	 * @return mixed  Session data value or null if not found.
+	 * @param  string $key Auth data key
+	 * @return mixed  Auth data value or null if not found.
 	 */
 	public function getTempdata(string $key = null)
 	{
@@ -853,7 +853,7 @@ class Session implements SessionInterface
 	/**
 	 * Removes a single piece of temporary data from the session.
 	 *
-	 * @param string $key Session data key
+	 * @param string $key Auth data key
 	 */
 	public function removeTempdata(string $key)
 	{

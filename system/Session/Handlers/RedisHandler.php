@@ -43,7 +43,7 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Exceptions\SessionException;
 
 /**
- * Session handler using Redis for persistence
+ * Auth handler using Redis for persistence
  */
 class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 {
@@ -136,7 +136,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 	 * Sanitizes save_path and initializes connection.
 	 *
 	 * @param  string $save_path Server path
-	 * @param  string $name      Session cookie name, unused
+	 * @param  string $name      Auth cookie name, unused
 	 * @return boolean
 	 */
 	public function open($save_path, $name): bool
@@ -150,15 +150,15 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 
 		if (! $redis->connect($this->savePath['host'], $this->savePath['port'], $this->savePath['timeout']))
 		{
-			$this->logger->error('Session: Unable to connect to Redis with the configured settings.');
+			$this->logger->error('Auth: Unable to connect to Redis with the configured settings.');
 		}
 		elseif (isset($this->savePath['password']) && ! $redis->auth($this->savePath['password']))
 		{
-			$this->logger->error('Session: Unable to authenticate to Redis instance.');
+			$this->logger->error('Auth: Unable to authenticate to Redis instance.');
 		}
 		elseif (isset($this->savePath['database']) && ! $redis->select($this->savePath['database']))
 		{
-			$this->logger->error('Session: Unable to select Redis database with index ' . $this->savePath['database']);
+			$this->logger->error('Auth: Unable to select Redis database with index ' . $this->savePath['database']);
 		}
 		else
 		{
@@ -176,7 +176,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Reads session data and acquires a lock
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return string|false	Serialized session data
 	 */
@@ -208,7 +208,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Writes (create / update) session data
 	 *
-	 * @param string $sessionID   Session ID
+	 * @param string $sessionID   Auth ID
 	 * @param string $sessionData Serialized session data
 	 *
 	 * @return boolean
@@ -281,7 +281,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 			}
 			catch (\RedisException $e)
 			{
-				$this->logger->error('Session: Got RedisException on close(): ' . $e->getMessage());
+				$this->logger->error('Auth: Got RedisException on close(): ' . $e->getMessage());
 			}
 
 			$this->redis = null;
@@ -309,7 +309,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 		{
 			if (($result = $this->redis->del($this->keyPrefix . $sessionID)) !== 1)
 			{
-				$this->logger->debug('Session: Redis::del() expected to return 1, got ' . var_export($result, true) . ' instead.');
+				$this->logger->debug('Auth: Redis::del() expected to return 1, got ' . var_export($result, true) . ' instead.');
 			}
 
 			return $this->destroyCookie();
@@ -341,7 +341,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Acquires an (emulated) lock.
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return boolean
 	 */
@@ -369,7 +369,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 
 			if (! $this->redis->setex($lock_key, 300, time()))
 			{
-				$this->logger->error('Session: Error while trying to obtain lock for ' . $this->keyPrefix . $sessionID);
+				$this->logger->error('Auth: Error while trying to obtain lock for ' . $this->keyPrefix . $sessionID);
 				return false;
 			}
 
@@ -380,12 +380,12 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 
 		if ($attempt === 30)
 		{
-			log_message('error', 'Session: Unable to obtain lock for ' . $this->keyPrefix . $sessionID . ' after 30 attempts, aborting.');
+			log_message('error', 'Auth: Unable to obtain lock for ' . $this->keyPrefix . $sessionID . ' after 30 attempts, aborting.');
 			return false;
 		}
 		elseif ($ttl === -1)
 		{
-			log_message('debug', 'Session: Lock for ' . $this->keyPrefix . $sessionID . ' had no TTL, overriding.');
+			log_message('debug', 'Auth: Lock for ' . $this->keyPrefix . $sessionID . ' had no TTL, overriding.');
 		}
 
 		$this->lock = true;
@@ -407,7 +407,7 @@ class RedisHandler extends BaseHandler implements \SessionHandlerInterface
 		{
 			if (! $this->redis->del($this->lockKey))
 			{
-				$this->logger->error('Session: Error while trying to free lock for ' . $this->lockKey);
+				$this->logger->error('Auth: Error while trying to free lock for ' . $this->lockKey);
 				return false;
 			}
 

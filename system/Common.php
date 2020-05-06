@@ -407,7 +407,7 @@ if (! function_exists('force_https'))
 
 		// If the session library is loaded, we should regenerate
 		// the session ID for safety sake.
-		if (class_exists('Session', false))
+		if (class_exists('Auth', false))
 		{
 			Services::session(null, true)
 				->regenerate();

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Session language strings.
+ * Auth language strings.
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
@@ -15,9 +15,9 @@
  */
 
 return [
-   'missingDatabaseTable'   => '`sessionSavePath` must have the table name for the Database Session Handler to work.',
-   'invalidSavePath'        => 'Session: Configured save path "{0}" is not a directory, does not exist or cannot be created.',
-   'writeProtectedSavePath' => 'Session: Configured save path "{0}" is not writable by the PHP process.',
-   'emptySavePath'          => 'Session: No save path configured.',
-   'invalidSavePathFormat'  => 'Session: Invalid Redis save path format: {0}',
+   'missingDatabaseTable'   => '`sessionSavePath` must have the table name for the Database Auth Handler to work.',
+   'invalidSavePath'        => 'Auth: Configured save path "{0}" is not a directory, does not exist or cannot be created.',
+   'writeProtectedSavePath' => 'Auth: Configured save path "{0}" is not writable by the PHP process.',
+   'emptySavePath'          => 'Auth: No save path configured.',
+   'invalidSavePathFormat'  => 'Auth: Invalid Redis save path format: {0}',
 ];

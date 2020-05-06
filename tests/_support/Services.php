@@ -5,6 +5,7 @@ use Config\Services as ConfigServices;
 
 /**
  * Services class for testing.
+ * @method static Session()
  */
 class Services
 {

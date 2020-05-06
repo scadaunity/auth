@@ -42,7 +42,7 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Exceptions\SessionException;
 
 /**
- * Session handler using Memcache for persistence
+ * Auth handler using Memcache for persistence
  */
 class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 {
@@ -114,7 +114,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 	 * Sanitizes save_path and initializes connections.
 	 *
 	 * @param string $save_path Server path(s)
-	 * @param string $name      Session cookie name, unused
+	 * @param string $name      Auth cookie name, unused
 	 *
 	 * @return boolean
 	 */
@@ -134,7 +134,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 		)
 		{
 			$this->memcached = null;
-			$this->logger->error('Session: Invalid Memcached save path format: ' . $this->savePath);
+			$this->logger->error('Auth: Invalid Memcached save path format: ' . $this->savePath);
 
 			return false;
 		}
@@ -144,7 +144,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 			// If Memcached already has this server (or if the port is invalid), skip it
 			if (in_array($match[1] . ':' . $match[2], $server_list, true))
 			{
-				$this->logger->debug('Session: Memcached server pool already has ' . $match[1] . ':' . $match[2]);
+				$this->logger->debug('Auth: Memcached server pool already has ' . $match[1] . ':' . $match[2]);
 				continue;
 			}
 
@@ -160,7 +160,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 
 		if (empty($server_list))
 		{
-			$this->logger->error('Session: Memcached server pool is empty.');
+			$this->logger->error('Auth: Memcached server pool is empty.');
 
 			return false;
 		}
@@ -175,7 +175,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Reads session data and acquires a lock
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return string    Serialized session data
 	 */
@@ -205,7 +205,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Writes (create / update) session data
 	 *
-	 * @param string $sessionID   Session ID
+	 * @param string $sessionID   Auth ID
 	 * @param string $sessionData Serialized session data
 	 *
 	 * @return boolean
@@ -285,7 +285,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Destroys the current session.
 	 *
-	 * @param string $session_id Session ID
+	 * @param string $session_id Auth ID
 	 *
 	 * @return boolean
 	 */
@@ -325,7 +325,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Acquires an (emulated) lock.
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return boolean
 	 */
@@ -350,7 +350,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 
 			if (! $this->memcached->set($lock_key, time(), 300))
 			{
-				$this->logger->error('Session: Error while trying to obtain lock for ' . $this->keyPrefix . $sessionID);
+				$this->logger->error('Auth: Error while trying to obtain lock for ' . $this->keyPrefix . $sessionID);
 
 				return false;
 			}
@@ -362,7 +362,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 
 		if ($attempt === 30)
 		{
-			$this->logger->error('Session: Unable to obtain lock for ' . $this->keyPrefix . $sessionID . ' after 30 attempts, aborting.');
+			$this->logger->error('Auth: Unable to obtain lock for ' . $this->keyPrefix . $sessionID . ' after 30 attempts, aborting.');
 
 			return false;
 		}
@@ -389,7 +389,7 @@ class MemcachedHandler extends BaseHandler implements \SessionHandlerInterface
 					$this->memcached->getResultCode() !== \Memcached::RES_NOTFOUND
 			)
 			{
-				$this->logger->error('Session: Error while trying to free lock for ' . $this->lockKey);
+				$this->logger->error('Auth: Error while trying to free lock for ' . $this->lockKey);
 
 				return false;
 			}

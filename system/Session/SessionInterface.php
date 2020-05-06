@@ -189,7 +189,7 @@ interface SessionInterface
 	 * Sets new data into the session, and marks it as temporary data
 	 * with a set lifespan.
 	 *
-	 * @param string|array $data  Session data key or associative array of items
+	 * @param string|array $data  Auth data key or associative array of items
 	 * @param mixed        $value Value to store
 	 * @param integer      $ttl   Time-to-live in seconds
 	 */
@@ -201,8 +201,8 @@ interface SessionInterface
 	 * Returns either a single piece of tempdata, or all temp data currently
 	 * in the session.
 	 *
-	 * @param  string $key Session data key
-	 * @return mixed        Session data value or null if not found.
+	 * @param  string $key Auth data key
+	 * @return mixed        Auth data value or null if not found.
 	 */
 	public function getTempdata(string $key = null);
 
@@ -211,7 +211,7 @@ interface SessionInterface
 	/**
 	 * Removes a single piece of temporary data from the session.
 	 *
-	 * @param string $key Session data key
+	 * @param string $key Auth data key
 	 */
 	public function removeTempdata(string $key);
 

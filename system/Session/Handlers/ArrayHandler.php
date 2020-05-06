@@ -45,7 +45,7 @@ use CodeIgniter\Database\BaseConnection;
 use Config\Database;
 
 /**
- * Session handler using static array for storage.
+ * Auth handler using static array for storage.
  * Intended only for use during testing.
  */
 class ArrayHandler extends BaseHandler implements \SessionHandlerInterface
@@ -60,7 +60,7 @@ class ArrayHandler extends BaseHandler implements \SessionHandlerInterface
 	 * Ensures we have an initialized database connection.
 	 *
 	 * @param string $savePath Path to session files' directory
-	 * @param string $name     Session cookie name
+	 * @param string $name     Auth cookie name
 	 *
 	 * @return boolean
 	 * @throws \Exception
@@ -77,7 +77,7 @@ class ArrayHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Reads session data and acquires a lock
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return string    Serialized session data
 	 */
@@ -93,7 +93,7 @@ class ArrayHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Writes (create / update) session data
 	 *
-	 * @param string $sessionID   Session ID
+	 * @param string $sessionID   Auth ID
 	 * @param string $sessionData Serialized session data
 	 *
 	 * @return boolean

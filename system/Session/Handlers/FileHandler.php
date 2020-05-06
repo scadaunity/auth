@@ -43,7 +43,7 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Exceptions\SessionException;
 
 /**
- * Session handler using file system for storage
+ * Auth handler using file system for storage
  */
 class FileHandler extends BaseHandler implements \SessionHandlerInterface
 {
@@ -125,7 +125,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	 * Sanitizes the save_path directory.
 	 *
 	 * @param string $savePath Path to session files' directory
-	 * @param string $name     Session cookie name
+	 * @param string $name     Auth cookie name
 	 *
 	 * @return boolean
 	 * @throws \Exception
@@ -159,7 +159,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Reads session data and acquires a lock
 	 *
-	 * @param string $sessionID Session ID
+	 * @param string $sessionID Auth ID
 	 *
 	 * @return string    Serialized session data
 	 */
@@ -173,14 +173,14 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 
 			if (($this->fileHandle = fopen($this->filePath . $sessionID, 'c+b')) === false)
 			{
-				$this->logger->error("Session: Unable to open file '" . $this->filePath . $sessionID . "'.");
+				$this->logger->error("Auth: Unable to open file '" . $this->filePath . $sessionID . "'.");
 
 				return false;
 			}
 
 			if (flock($this->fileHandle, LOCK_EX) === false)
 			{
-				$this->logger->error("Session: Unable to obtain lock for file '" . $this->filePath . $sessionID . "'.");
+				$this->logger->error("Auth: Unable to obtain lock for file '" . $this->filePath . $sessionID . "'.");
 				fclose($this->fileHandle);
 				$this->fileHandle = null;
 
@@ -230,7 +230,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Writes (create / update) session data
 	 *
-	 * @param string $sessionID   Session ID
+	 * @param string $sessionID   Auth ID
 	 * @param string $sessionData Serialized session data
 	 *
 	 * @return boolean
@@ -271,7 +271,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 			if (! is_int($result))
 			{
 				$this->fingerprint = md5(substr($sessionData, 0, $written));
-				$this->logger->error('Session: Unable to write data.');
+				$this->logger->error('Auth: Unable to write data.');
 
 				return false;
 			}
@@ -313,7 +313,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	 *
 	 * Destroys the current session.
 	 *
-	 * @param string $session_id Session ID
+	 * @param string $session_id Auth ID
 	 *
 	 * @return boolean
 	 */
@@ -350,7 +350,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	{
 		if (! is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false)
 		{
-			$this->logger->debug("Session: Garbage collector couldn't list files under directory '" . $this->savePath . "'.");
+			$this->logger->debug("Auth: Garbage collector couldn't list files under directory '" . $this->savePath . "'.");
 
 			return false;
 		}
@@ -389,7 +389,7 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 	//--------------------------------------------------------------------
 
 	/**
-	 * Configure Session ID regular expression
+	 * Configure Auth ID regular expression
 	 */
 	protected function configureSessionIDRegex()
 	{

@@ -10,7 +10,7 @@ use App\Models\UserModel;
 use App\Models\AttemptModel;
 use App\Models\VerifyModel;
 use CodeIgniter\Services;
-
+use function Composer\Autoload\includeFile;
 
 
 class Auth extends BaseController
@@ -294,7 +294,7 @@ class Auth extends BaseController
     // Envia um email para o usuario poder resetar o password da conta
     private function sendEmailForgot($emailforgot, $password)
     {
-        /* Configurações do smtp do gmail */
+        /* Configura o modulo */
         $config = array(
             'protocol' => 'smtp',
             'SMTPHost' => 'smtp.gmail.com',

@@ -21,7 +21,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://localhost/scadaunity/public';
+	public $baseURL = 'http://192.168.0.8/scadaunity/public';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class App extends BaseConfig
 	| should run under for this request.
 	|
 	*/
-	public $defaultLocale = 'en';
+	public $defaultLocale = 'pt-br';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -128,16 +128,16 @@ class App extends BaseConfig
 
 	/*
 	|--------------------------------------------------------------------------
-	| Session Variables
+	| Auth Variables
 	|--------------------------------------------------------------------------
 	|
 	| 'sessionDriver'
 	|
 	|	The storage driver to use: files, database, redis, memcached
-	|       - CodeIgniter\Session\Handlers\FileHandler
-	|       - CodeIgniter\Session\Handlers\DatabaseHandler
-	|       - CodeIgniter\Session\Handlers\MemcachedHandler
-	|       - CodeIgniter\Session\Handlers\RedisHandler
+	|       - CodeIgniter\Auth\Handlers\FileHandler
+	|       - CodeIgniter\Auth\Handlers\DatabaseHandler
+	|       - CodeIgniter\Auth\Handlers\MemcachedHandler
+	|       - CodeIgniter\Auth\Handlers\RedisHandler
 	|
 	| 'sessionCookieName'
 	|
