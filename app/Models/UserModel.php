@@ -25,34 +25,7 @@ class UserModel extends Model
         $this->db = db_connect();
     }
 
-    /**
-     * Verifica se o usuario possui um login valido.
-     *
-     * @param string $email
-     * @param string $password
-     *
-     * @return array $user   Retorna os dados do usuario ou valor null.
-     */
-    public function checkLogin($email, $password)
-    {
-        /* Verifica o email*/
-        $user = $this->checkEmail($email);
-        if ($user) {
-            // Usuario encontrado
-            $checkPassword = $this->checkPassword($password, $user['password']);
-            if ($checkPassword) {
-                if ($user['state'] == 1) {
-                    // Remove o password
-                    $key = array_search($user['password'], $user);
-                    if ($key !== false) {
-                        unset($user[$key]);
-                    }
-                    return $user;
-                }
-            }
-
-        }
-    }
+    //--------------------------------------------------------------------
 
     /**
      * Verifica se o email do usuario existe na base de dados.
@@ -67,7 +40,7 @@ class UserModel extends Model
             $email
         );
 
-        $query = "SELECT * FROM users WHERE email = ?";
+        $query = 'SELECT * FROM $this->table WHERE email = ?';
         $result = $this->db->query($query, $data)->getResult('array');
 
         if (count($result) == 0) {
@@ -77,6 +50,28 @@ class UserModel extends Model
         }
     }
 
+    //--------------------------------------------------------------------
+
+    /**
+     * Busca os dados do usuarios pelo e-mail.
+     *
+     * @param string $email
+     *
+     * @return array
+     */
+    public function getByEmail(string $email)
+    {
+        $query = "SELECT * FROM $this->table WHERE email = ?";
+        $result = $this->db->query($query, $email)->getResult('array');
+        if (count($result) == 0) {
+            return false;
+        } else {
+            return $result[0];
+        }
+    }
+
+    //--------------------------------------------------------------------
+
     /**
      * Verifica se o password e o mesmo passado.
      *
@@ -85,7 +80,7 @@ class UserModel extends Model
      *
      * @return bool    Retorna true se for valido, false de for diferente.
      */
-    protected function checkPassword($password, $hash)
+    public function checkPassword($password, $hash)
     {
         if (password_verify($password, $hash)) {
             return true;

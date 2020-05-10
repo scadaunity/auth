@@ -32,6 +32,8 @@ class VerifyModel extends Model
         $this->db = db_connect();
     }
 
+    //--------------------------------------------------------------------
+
     /**
      * Busca se existe verificação da conta para efetuar o login.
      *
@@ -55,6 +57,8 @@ class VerifyModel extends Model
         }
     }
 
+    //--------------------------------------------------------------------
+
     /**
      * Busca se existe verificação da conta para efetuar o login.
      *
@@ -77,4 +81,28 @@ class VerifyModel extends Model
             return $result;
         }
     }
+
+    //--------------------------------------------------------------------
+
+    /**
+     * Busca se existe verificação da conta.
+     *
+     * @param string $user_id
+     *
+     * @return array $result
+     */
+    public function getByUserId($user_id)
+    {
+        $data = array(
+            $user_id
+        );
+
+        $query = "SELECT * FROM $this->table WHERE user_id = ?";
+        $result = $this->db->query($query, $data)->getResult('array');
+
+        if (count($result) > 0) {
+            return $result[0];
+        }
+    }
+
 }

@@ -21,7 +21,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://192.168.0.8/scadaunity/public';
+	public $baseURL = 'http://localhost/scadaunity/public';
 
 	/*
 	|--------------------------------------------------------------------------

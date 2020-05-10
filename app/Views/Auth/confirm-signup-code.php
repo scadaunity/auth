@@ -15,7 +15,7 @@
         <form method="post" action="<?php echo base_url('Auth/requestForgot') ?>">
             <div class="login__block__body">
                 <p class="text-muted">Digite o código de verificação enviado para</p>
-                <p>scadaunity@gmail.com</p>
+                <p>o email cadastrado</p>
 
                 <div class="form-group">
                     <input type="text" class="form-control text-center" placeholder="Insira o codigo de 6 digitos" autocomplete="off"

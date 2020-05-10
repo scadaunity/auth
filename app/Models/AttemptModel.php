@@ -14,7 +14,7 @@ class AttemptModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['ip', 'device'];
+    protected $allowedFields = ['ip', 'email'];
     protected $useTimestamps = true;
     protected $validationRules = [];
     protected $validationMessages = [];
@@ -32,19 +32,33 @@ class AttemptModel extends Model
      *
      * @return array    Retorna os dados do usuario ou valor null.
      */
-    public function getAttempt($ip)
+    public function getByEmail(string $email): array
     {
         $data = array(
-            $ip
+            $email
         );
 
-        $query = "SELECT * FROM login_Attempt WHERE ip = ?";
-        $result = $this->db->query($query, $data)->getResult('array');
+        $query = "SELECT * FROM login_Attempt WHERE email = ?";
+        return $this->db->query($query, $data)->getResult('array');
 
-        if (count($result) == 0) {
-            return false;
-        } else {
-            return $result;
+
+    }
+
+    /**
+     * conta as tentativas de login.
+     *
+     * @param string $email
+     *
+     * @return int    Retorna os dados do usuario ou valor null.
+     */
+    public function countAttempt(string $email)
+    {
+        // busca os dados na tabela attempt
+        $result = $this->getAttempt($email);
+
+        // Verifica se foi retornado algum registro
+        if (is_array($result)) {
+            return count($result);
         }
     }
 }

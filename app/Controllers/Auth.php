@@ -13,19 +13,19 @@ use CodeIgniter\Services;
 
 
 
-class Auth extends BaseController
-{
+class Auth extends BaseController{
 
     protected $userModel;
     protected $attemptModel;
     protected $verifyModel;
     protected $email;
     protected $session;
-    protected $tryLogin;
+
+    /* Configurações do modulo*/
+    protected $tryLogin; // Define o numero de tentativas de login
 
     /* Construct */
-    public function __construct()
-    {
+    public function __construct(){
         $this->userModel = new UserModel();
         $this->attemptModel = new AttemptModel();
         $this->verifyModel = new VerifyModel();
@@ -35,109 +35,117 @@ class Auth extends BaseController
     }
 
     /* Pages */
-    public function index()
-    {
+
+    //--------------------------------------------------------------------
+    public function index(){
         echo '<h1>Index</h1>';
     }
-
-    public function login()
-    {
+    //--------------------------------------------------------------------
+    public function login(){
         echo view('template/header');
         echo view('Auth/login');
         echo view('template/footer');
     }
-
-    public function register()
-    {
+    //--------------------------------------------------------------------
+    public function register(){
         echo view('template/header');
         echo view('Auth/register');
         echo view('template/footer');
     }
-
-    public function forgot()
-    {
+    //--------------------------------------------------------------------
+    public function forgot(){
         echo view('template/header');
         echo view('Auth/forgot');
         echo view('template/footer');
     }
-
-    public function confirmSignup()
-    {
+    //--------------------------------------------------------------------
+    public function confirmSignup(){
         echo view('template/header');
-        echo view('Auth/confirm-signup');
+        echo view('Auth/confirm-signup-code');
         echo view('template/footer');
     }
+    //--------------------------------------------------------------------
 
     /* Actions */
+
+    //--------------------------------------------------------------------
     public function autenticate()
     {
-        // Verifica se existe email e senha
+        // Foi enviado email e senha?
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-
         if ($email == '' || $password == "") {
+            //Não
             $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
             return redirect()->to(base_url('login'));
-            die();
         }
 
-        // Verifica se a conta precisa de verificação
-        $verify = $this->verifyModel->getVerify($this->request->getIPAddress());
-        if (is_array($verify)) {
-            $this->session->setFlashdata(['alert' => 'Você precisa concluir a inscrição da sua conta ', 'alert-cls' => 'danger']);
+        // Procura usuario
+        $user = $this->userModel->getByEmail($email);
+
+        // Usuario encontrado?
+        if (!is_array($user)){
+            // Não
+            $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
+            return redirect()->to(base_url('login'));
+        }
+
+        // Conta verificada
+        if ($user['activation_code']==''){
+            $this->session->setFlashdata(['alert' => 'Conta não verificada', 'alert-cls' => 'danger']);
             return redirect()->to(base_url('verify'));
-            die();
+        }
+
+        // Verifica o estado da conta
+        if ($user['state']==0){
+            $this->session->setFlashdata(['alert' => 'Conta esta bloqueada', 'alert-cls' => 'danger']);
+            return redirect()->to(base_url('login'));
+        }
+
+        //Valida o password
+        $checkPassword = $this->userModel->checkPassword($password,$user['password']);
+        if ($checkPassword==false){
+            $data = [
+                'email' => $user['email'],
+                'ip'    => $this->request->getIPAddress()
+            ];
+            $this->attemptModel->save($data);
+            $this->session->setFlashdata(['alert' => 'Login invalido<br>', 'alert-cls' => 'danger']);
+            return redirect()->to(base_url('login'));
         }
 
         // Verifica se a conta esta suspensa por tentativas de login
-        if ($this->countAttempt() >= $this->tryLogin) {
-            $this->session->setFlashdata(['alert' => 'Numero de tentativas excedidas ' . $this->countAttempt() . '<br>Sua conta foi suspensa, tente novamente daqui a 1 hora', 'alert-cls' => 'danger']);
-            //$this->login();
+        if ($this->attemptModel->countAttempt($user['email']) >= $this->tryLogin) {
+            $this->session->setFlashdata(['alert' => 'Numero de tentativas excedidas ' . $this->attemptModel->countAttempt($user['email']) . '<br>Sua conta foi suspensa, tente novamente daqui a 1 hora', 'alert-cls' => 'danger']);
             return redirect()->to(base_url('login'));
-            die();
         }
 
         // Verifica se o usuario pode fazer login
-        $result = $this->userModel->checkLogin($email, $password);
 
-        if (is_array($result)) {
-            // Login valido
-            $this->setSession($result);
-            $this->deleteAttempt();
-            return redirect()->to(base_url('Home'));
-        } else {
-            // Login invalido
-            $this->insertAttempt();
-            $this->session->setFlashdata(['alert' => 'Login invalido<br>Numero de tentativas: ' . $this->countAttempt() . ' / ' . $this->tryLogin, 'alert-cls' => 'danger']);
-            $this->login();
-            die();
-        }
+        $this->setSession($user);
+        $this->deleteAttempt($user);
+        return redirect()->to(base_url('Home'));
     }
 
-    public function logout()
-    {
+    //--------------------------------------------------------------------
+    public function logout(){
         session_destroy();
-        $this->login();
+        return redirect()->to(base_url('login'));
     }
 
-    public function create()
-    {
-        /* Armazena os dados recebidos */
+    //--------------------------------------------------------------------
+    public function create(){
+        /* Validação dos dados recebidos pelo post */
         $name = $this->request->getPost('name');
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
         $acept = $this->request->getPost('acept');
 
-        /* Verifica se os dados foram enviados */
         if ($name == '' || $email == '' || $password == "" || $acept == false) {
             // Dados incorretos
             $this->session->setFlashdata(['alert' => 'Erro no preechimento dos dados', 'alert-cls' => 'danger']);
-            $this->register();
-            die();
+            return redirect()->to(base_url('register'));
         }
-
-        /* Cria um hash do password */
-        $newPassword = password_hash($password, PASSWORD_DEFAULT);
 
         /* pesquisa pelo email no banco */
         $result = $this->userModel->checkEmail($email);
@@ -146,29 +154,25 @@ class Auth extends BaseController
         if ($result) {
             /* O email ja existe */
             $this->session->setFlashdata(['alert' => 'Erro o email já existe', 'alert-cls' => 'danger']);
-            $this->login();
-            die();
-
+            return redirect()->to(base_url('login'));
         } else {
             /* cria um novo usuario */
             $dataUser = array(
                 'name' => $name,
                 'email' => $email,
-                'password' => $newPassword,
+                'password' => password_hash($password, PASSWORD_DEFAULT),
                 'state' => 0
             );
             $result = $this->userModel->save($dataUser);
-
             if ($result) {
                 $this->session->setFlashdata(['alert' => 'Sua conta foi criada com sucesso<br>Acesse seu email para ativar sua conta', 'alert-cls' => 'success']);
-                $this->confirmSignup();
-                die();
+                return redirect()->to(base_url('login'));
             }
         }
     }
 
-    public function requestForgot()
-    {
+    //--------------------------------------------------------------------
+    public function requestForgot(){
 
         /* Armazena os dados recebidos */
         $email = $this->request->getPost('email');
@@ -210,28 +214,23 @@ class Auth extends BaseController
         $this->session->set($data);
     }
 
+    //--------------------------------------------------------------------
+
     public function checkSession()
     {
        return  $this->session->has('id');
     }
 
-    // Retorna o numero de tentativas de login
-    private function countAttempt()
-    {
-        // busca os dados na tabela attempt
-        $result = $this->attemptModel->getAttempt($this->request->getIPAddress());
+    //--------------------------------------------------------------------
 
-        // Verifica se foi retornado algum registro
-        if (is_array($result)) {
-            return count($result);
-        }
-    }
+
+    //--------------------------------------------------------------------
 
     // Retorna um array com as tentativas de login
-    public function getAllAttempt()
+    public function getAllAttempt($user)
     {
         // busca os dados na tabela attempt
-        $result = $this->attemptModel->getAttempt($this->request->getIPAddress());
+        $result = $this->attemptModel->getAttempt($user['email']);
 
         // Verifica se foi retornado um array de dados
         if (is_array($result)) {
@@ -239,10 +238,13 @@ class Auth extends BaseController
         }
     }
 
+    //--------------------------------------------------------------------
+
     // Insere um registro na tabela de tentativas de login
-    private function insertAttempt()
+    private function insertAttempt($user)
     {
         $dataUser = array(
+            'email' => $user['email'],
             'ip' => $this->request->getIPAddress(),
         );
 
@@ -251,11 +253,13 @@ class Auth extends BaseController
         }
     }
 
+    //--------------------------------------------------------------------
+
     // remove do registro na tabela de tentativas de login
-    public function deleteAttempt()
+    public function deleteAttempt($user)
     {
-        if ($this->countAttempt() > 0) {
-            $data = $this->getAllAttempt();
+        if ($this->attemptModel->countAttempt($user['email']) > 0) {
+            $data = $this->getAllAttempt($user);
             if (is_array($data)) {
 
                 foreach ($data as $key => $value) {
@@ -265,6 +269,8 @@ class Auth extends BaseController
         }
 
     }
+
+    //--------------------------------------------------------------------
 
     // Insere um registro na tabela de tentativas de login
     private function insertVerify($code)
@@ -276,6 +282,8 @@ class Auth extends BaseController
         $result = $this->verifyModel->save($data);
 
     }
+
+    //--------------------------------------------------------------------
 
     // remove do registro na tabela de tentativas de login
     public function deleteVerify()
@@ -290,6 +298,8 @@ class Auth extends BaseController
         }
 
     }
+
+    //--------------------------------------------------------------------
 
     // Envia um email para o usuario poder resetar o password da conta
     private function sendEmailForgot($emailforgot, $password)
@@ -322,6 +332,8 @@ class Auth extends BaseController
             return false;
         }
     }
+
+    //--------------------------------------------------------------------
 
     // Envia um email para o usuario confirmar a inscrição da conta
     public function sendEmailSignup($email)
