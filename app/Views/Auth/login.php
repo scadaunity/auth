@@ -1,3 +1,6 @@
+<?php
+    echo __DIR__;
+?>
 <div class="login">
     <!-- Login -->
     <div class="login__block active" id="login">

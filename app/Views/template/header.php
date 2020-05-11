@@ -9,11 +9,9 @@
     <link rel="shortcut icon" href="<?php echo base_url('assets/img/logo/LogoIcon01.png') ?>" type="image/x-icon">
     <title>Scada Unity</title>
     <!-- Vendor styles -->
-    <link rel="stylesheet"
-          href="<?php echo base_url('assets/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css') ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendors/bower_components/animate.css/animate.min.css') ?>">
-    <link rel="stylesheet"
-          href="<?php echo base_url('assets/vendors/bower_components/jquery.scrollbar/jquery.scrollbar.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/lib/animate.css/animate.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/lib/jquery.scrollbar/jquery.scrollbar.css') ?>">
 
     <!-- App styles -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/app.min.css') ?>">
