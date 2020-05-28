@@ -1,0 +1,21 @@
+{
+    "name": "scadaunity/auth",
+    "description": "Codeigniter 4 autenticação",
+    "keywords": ["scadaunity", "codeigniter4", "ci4","auth","authenticate"],
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Scada Unity",
+            "homepage": "http://www.php-fig.org/"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Scadaunity\\Auth": "src"
+        }
+    }
+}
