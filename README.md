@@ -11,30 +11,18 @@ A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua 
 [![Latest Stable Version](https://poser.pugx.org/doctrine/instantiator/v/stable.png)](https://packagist.org/packages/doctrine/instantiator)
 [![Latest Unstable Version](https://poser.pugx.org/doctrine/instantiator/v/unstable.png)](https://packagist.org/packages/doctrine/instantiator)
 
-## Table of contents
-- [Quick start](#Quickstart)
+## Tabela de conteúdo
 - [Instalação](#Instalação)
 - [Configuração](#Configuração)
 -
-## Quick start
-Três opções estão disponiveis:
- 
-- Composer (Indicado): 
-```
-composer require "scadaunity/auth"
-```
-- Clonar o repositório:
-
-``` 
-git clone https://github.com/scadaunity/auth.git
-```
-- [Download da versão mais recente.](https://github.com/scadaunity/auth/archive/master.zip)
 
 ## Instalação
 - Via composer
 ```sh
-    composer require "scadaunity/Auth"
+    composer require "scadaunity/auth"
 ```
+
+- [Download da versão mais recente.](https://github.com/scadaunity/auth/archive/master.zip)
 
 - Após a instalação via composer, você encontrará dentro da pasta vendor, os seguintes diretórios e arquivos, conforme abaixo: 
 
