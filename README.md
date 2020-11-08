@@ -1,6 +1,6 @@
 # Scadaunity\Auth
-![Screenshot](https://kint-php.github.io/kint/images/intro.png)
-https://forum.codeigniter.com/images/duende/logo.png
+![Screenshot](https://forum.codeigniter.com/images/duende/logo.png)
+
 - Infraestrutura de autenticação leve e seguro para seus aplicativos criados com o framework CODEIGNITER 4.
 
 A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua utilização em modo de produção e não nos responsabilizamos pelo uso desta biblioteca ainda em periodo de desenvolvimento.
