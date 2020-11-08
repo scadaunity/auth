@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=7.2",
-        "codeigniter4/codeigniter4-standard": "^1.0"
+        "codeigniter4/framework": "^4",
+        "firebase/php-jwt": "^5.2",
     },
     "autoload": {
 
