@@ -8,10 +8,8 @@ class AttemptModel extends Model
 {
     // Configuração do model
     protected $limit = 5;
-    //Configuração da tabela
-    protected $db;
-    protected $table = 'login_Attempt';
-    protected $primaryKey = 'id';
+
+    protected $table = 'Auth_Login_Attempt';
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
     protected $allowedFields = ['ip', 'email'];
@@ -20,13 +18,8 @@ class AttemptModel extends Model
     protected $validationMessages = [];
     protected $skipValidation = false;
 
-    public function __construct()
-    {
-        $this->db = db_connect();
-    }
-
     /**
-     * conta as tentativas de login.
+     * Conta as tentativas de login.
      *
      * @param string $email
      *
@@ -56,9 +49,7 @@ class AttemptModel extends Model
             $email
         );
 
-        $query = "SELECT * FROM login_Attempt WHERE email = ?";
+        $query = "SELECT * FROM $this->table WHERE email = ?";
         return $this->db->query($query, $data)->getResult('array');
-
-
     }
 }

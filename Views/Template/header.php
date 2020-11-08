@@ -6,19 +6,26 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="<?php echo base_url('assets/img/logo/LogoIcon01.png') ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo base_url('src/assets/img/logo/LogoIcon01.png') ?>" type="image/x-icon">
     <title>Scada Unity</title>
-    <!-- Vendor styles -->
-    <link rel="stylesheet"
-          href="<?php echo base_url('assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css') ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/lib/animate.css/animate.min.css') ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/lib/jquery.scrollbar/jquery.scrollbar.css') ?>">
 
-    <!-- App styles -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/app.min.css') ?>">
+    <!-- Carrega css Global -->
+    <link rel="stylesheet" href="<?php echo base_url('src/assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('src/assets/lib/animate.css/animate.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('src/assets/lib/jquery.scrollbar/jquery.scrollbar.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('src/assets/css/app.min.css') ?>">
+
+    <!-- Carrega css individual através do controller através de um array de dados $css -->
+    <?php
+        if (isset($css) and !empty($css)){
+            foreach ($css as $cssItem){
+                echo '<link rel="stylesheet" href="'.$cssItem.'">';
+            }
+        }
+    ?>
 </head>
 
-<body data-sa-theme="9">
+<body data-sa-theme="5">
 <main class="main">
     <?php
     if (isset($_SESSION['alert'])) : ?>

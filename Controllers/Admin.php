@@ -2,10 +2,11 @@
 
 namespace Scadaunity\Auth\Controllers;
 
+use App\Controllers\BaseController;
 use CodeIgniter\Controller;
 use Scadaunity\Auth\Models;
 
-class Admin extends Controller
+class Admin extends BaseController
 {
     protected $userModel;
     public function __construct()
@@ -17,20 +18,24 @@ class Admin extends Controller
 
     public function index()
     {
-        $data = array(
-            'users'=> $this->userModel->findAll()
-        );
         echo view('Scadaunity\Auth\Views\Template\header');
-        echo view('Scadaunity\Auth\Views\Template\admin\navbar');
-        echo view('Scadaunity\Auth\Views\Template\admin\sidebar');
-        echo view('Scadaunity\Auth\Views\admin',$data);
+        echo view('Scadaunity\Auth\Views\Template\navbar');
+        echo view('Scadaunity\Auth\Views\Template\sidebar');
+        echo view('Scadaunity\Auth\Views\admin');
         echo view('Scadaunity\Auth\Views\Template\footer');
     }
+
     public function users()
     {
         $data = array(
-            'page'=>'Scadaunity\Auth\Views\admin\users'
+            'users' => $this->userModel->findAll(),
         );
-        echo view('Scadaunity\Auth\Views\admin\template\content',$data);
+
+        echo view('Scadaunity\Auth\Views\Template\header');
+        echo view('Scadaunity\Auth\Views\Template\navbar');
+        echo view('Scadaunity\Auth\Views\Template\sidebar');
+        echo view('Scadaunity\Auth\Views\users',$data);
+        echo view('Scadaunity\Auth\Views\Template\footer');
     }
+
 }

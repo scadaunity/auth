@@ -4,17 +4,23 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-
-    protected $table = 'users';
-    protected $returnType = 'array';
+    protected $table = 'Auth_Users';
+    protected $returnType = 'object';
     protected $useSoftDeletes = true;
-    protected $allowedFields = ['name', 'email', 'password', 'activation_code', 'state', 'avatar'];
+    protected $allowedFields = [
+        'name',
+        'email',
+        'password',
+        'activation_code',
+        'state',
+        'avatar',
+        'token',
+        'email_verified'
+    ];
     protected $useTimestamps = true;
-
     protected $validationRules = [];
     protected $validationMessages = [];
     protected $skipValidation = false;
-
 
     /* Getters*/
     //--------------------------------------------------------------------
@@ -44,8 +50,7 @@ class UserModel extends Model
      *
      * @param string $password
      * @param string $hash
-     *
-     * @return bool    Retorna true se for valido, false de for diferente.
+     * @return bool
      */
     public function checkPassword($password, $hash)
     {
@@ -56,6 +61,8 @@ class UserModel extends Model
         }
     }
 
-    /* Setters*/
-    //--------------------------------------------------------------------
+    public function addresses()
+    {
+        return (new Adresses())->where('user_id',uid);
+    }
 }

@@ -5,25 +5,16 @@
     </div>
 
     <div class="logo hidden-sm-down">
-        <h1>
-
-            <a href="#" class="align-middle">
+        <h1 style="font-size: 30px">
+            <a href="#">
                 <img alt="App Logo" class="listview__img"
-                     src="<?php echo base_url('assets/img/logo/LogoIcon01.png') ?>"/>
-                <span class="pt-3">Scada Unity</span>
+                     src="<?php echo base_url('src/assets/img/logo/LogoIcon01.png') ?>"/>
+                <span>Scada Unity</span>
             </a>
         </h1>
     </div>
 
-    <form class="search">
-        <div class="search__inner">
-            <input type="text" class="search__text" placeholder="Pesquisar" style="border-radius: 20px">
-            <i class="zmdi zmdi-search search__helper" data-sa-action="search-close"></i>
-        </div>
-    </form>
-
     <ul class="top-nav">
-        <li class="hidden-xl-up"><a href="#" data-sa-action="search-open"><i class="zmdi zmdi-search"></i></a></li>
 
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="top-nav__notify"><i class="zmdi zmdi-email"></i></a>
@@ -38,7 +29,7 @@
 
                 <div class="listview listview--hover">
                     <a href="#" class="listview__item">
-                        <img src="<?php echo base_url('assets/img/avatar/1.jpg') ?>"
+                        <img src="<?php echo base_url('src/assets/img/avatar/1.jpg') ?>"
                              class="listview__img" alt="">
 
                         <div class="listview__content">
@@ -50,7 +41,7 @@
                     </a>
 
                     <a href="#" class="listview__item">
-                        <img src="<?php echo base_url('assets/img/avatar/2.jpg') ?>"
+                        <img src="<?php echo base_url('src/assets/img/avatar/2.jpg') ?>"
                              class="listview__img" alt="">
 
                         <div class="listview__content">
@@ -85,7 +76,7 @@
                 <div class="listview listview--hover">
                     <div class="listview__scroll scrollbar-inner">
                         <a href="#" class="listview__item">
-                            <img src="<?php echo base_url('assets/img/avatar/1.jpg') ?>"
+                            <img src="<?php echo base_url('src/assets/img/avatar/1.jpg') ?>"
                                  class="listview__img" alt="">
 
                             <div class="listview__content">
@@ -95,7 +86,7 @@
                         </a>
 
                         <a href="#" class="listview__item">
-                            <img src="<?php echo base_url('assets/img/avatar/2.jpg') ?>"
+                            <img src="<?php echo base_url('src/assets/img/avatar/2.jpg') ?>"
                                  class="listview__img" alt="">
 
                             <div class="listview__content">
@@ -105,7 +96,7 @@
                         </a>
 
                         <a href="#" class="listview__item">
-                            <img src="<?php echo base_url('assets/img/avatar/3.jpg') ?>"
+                            <img src="<?php echo base_url('src/assets/img/avatar/3.jpg') ?>"
                                  class="listview__img" alt="">
 
                             <div class="listview__content">

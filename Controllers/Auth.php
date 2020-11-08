@@ -1,46 +1,81 @@
-<?php /** @noinspection PhpInconsistentReturnPointsInspection */
-
-namespace Scadaunity\Auth\Controllers;
+<?php
 /**
- * Created by Scada Unity.
- * User: Paulo César Andrade Souza
- * Date: 18/04/2020
- * Time: 22:17
+ * Scada Unity - Auth
+ *
+ * Sistema de autenticação Codeigniter 4
+ *
+ * Copyright (c) 2019 Scada Unity
+ *
+ * @package    ScadaUnity\Auth
+ * @author     Paulo César Andrade Souza
+ * @copyright  2019-2020 Scada Unity
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link       https://scadaunity.tk
+ * @since      Version 2.0.0
+ * @filesource
  */
 
-use CodeIgniter\Controller;
+namespace Scadaunity\Auth\Controllers;
+
+use App\Controllers\BaseController;
 use CodeIgniter\Services;
-use phpDocumentor\Reflection\Types\Boolean;
+use Firebase\JWT\JWT;
 use Scadaunity\Auth\Models\AttemptModel;
 use Scadaunity\Auth\Models\UserModel;
 
-
-class Auth extends Controller
+/**
+ * Class Auth
+ * @package Scadaunity\Auth\Controllers
+ */
+class Auth extends BaseController
 {
+    /**
+     * @var UserModel
+     */
     protected $userModel;
+    /**
+     * @var AttemptModel
+     */
     protected $attemptModel;
     protected $email;
+    /**
+     * @var CodeIgniter\Config
+     */
     protected $session;
-    protected $config;
+    //protected $config;
 
-    /* Configurações do modulo*/
-    protected $tryLogin; // Define o numero de tentativas de login
+    /**
+     * Define o numero de tentativas de login para bloquear conta
+     *
+     * @var int
+     */
+    protected $tryLogin = 5;
 
-    /* Construct */
+    /**
+     * Auth constructor.
+     */
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->attemptModel = new AttemptModel();
-        $this->email = Services::email();
         $this->session = Services::session();
-        $this->tryLogin = 5;
-        $this->config = new \Scadaunity\Auth\Config\Auth();
+        $this->email = Services::email();
+
     }
 
-    /* Pages */
+    //--------------------------------------------------------------------
+    //--------------------------------------------------------------------
+    // Pages
+    //--------------------------------------------------------------------
 
+    /**
+     *
+     */
     public function index()
     {
+        echo view('Scadaunity\Auth\Views\Template\header');
+        echo view('Scadaunity\Auth\Views\login');
+        echo view('Scadaunity\Auth\Views\Template\footer');
 
     }
 
@@ -74,45 +109,71 @@ class Auth extends Controller
 
     /* Actions */
     //--------------------------------------------------------------------
-    public function confirmSignup(string $id = null)
+    public function verify(array $user = null)
     {
+        if ($user == null) {
+            $this->session->setFlashdata(['alert' => 'Dados invalidos', 'alert-cls' => 'danger']);
+            return $this->login();
+        }
+
         $data = array(
-            'id' => $id,
+            'user' => $user,
         );
+
         echo view('Scadaunity\Auth\Views\Template\header');
-        echo view('Scadaunity\Auth\Views\confirm-signup-code', $data);
+        echo view('Scadaunity\Auth\Views\verify', $data);
         echo view('Scadaunity\Auth\Views\Template\footer');
     }
 
     //--------------------------------------------------------------------
     public function autenticate()
     {
-        // Valida o post
+        /** Valida o post */
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-        if ($email == '' || $password == "") {
+        if ($email == '' || $password == '') {
             $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
+            return redirect()->to('login');
         }
 
-        // Procura usuario
+        /** Procura usuario */
         $user = $this->userModel->getByEmail($email);
         if (!is_array($user)) {
             $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
+            return redirect()->to('login');
+        }
+
+        /** Email verificado */
+        if ($user['email_verified'] == 0) {
+            $this->session->setFlashdata(['alert' => 'Verifique sua caixa de email para <bold>ativar sua conta</bold>', 'alert-cls' => 'danger']);
+            return $this->verify($user);
+        }
+
+        /** Verifica o estado da conta */
+        if ($user['state'] == 0) {
+            $this->session->setFlashdata(['alert' => 'Sua Conta esta suspensa, entre em contato com o administrador', 'alert-cls' => 'danger']);
+            return redirect()->to('login');
+        }
+
+        /** Verifica se a conta esta suspensa por tentativas de login */
+        if ($this->attemptModel->countAttempt($user['email']) >= $this->tryLogin) {
+            $this->session->setFlashdata(['alert' => 'Numero de tentativas excedidas ' . $this->attemptModel->countAttempt($user['email']) . '<br>Sua conta foi suspensa, tente novamente daqui a 1 hora', 'alert-cls' => 'danger']);
+            return redirect()->to('login');
+        }
+
+        /** Email verificado */
+        if ($user['email_verified'] == 0) {
+            $this->session->setFlashdata(['alert' => 'Verifique sua caixa de email para <bold>ativar sua conta</bold>', 'alert-cls' => 'danger']);
+            return $this->verify($user);
         }
 
         // Conta verificada
-        if ($user['activation_code'] == '') {
+        if ($user['token'] == '') {
             $this->session->setFlashdata(['alert' => 'Conta não verificada', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/verify'));
+            return $this->verify();
         }
 
-        // Verifica o estado da conta
-        if ($user['state'] == 0) {
-            $this->session->setFlashdata(['alert' => 'Conta esta bloqueada', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
-        }
+
 
         //Valida o password
         $checkPassword = $this->userModel->checkPassword($password, $user['password']);
@@ -122,32 +183,31 @@ class Auth extends Controller
                 'ip' => $this->request->getIPAddress()
             ];
             $this->attemptModel->save($data);
-            return redirect()->to(base_url('Auth/login'));
+            $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
+            return redirect()->to('login');
         }
 
-        // Verifica se a conta esta suspensa por tentativas de login
-        if ($this->attemptModel->countAttempt($user['email']) >= $this->tryLogin) {
-            $this->session->setFlashdata(['alert' => 'Numero de tentativas excedidas ' . $this->attemptModel->countAttempt($user['email']) . '<br>Sua conta foi suspensa, tente novamente daqui a 1 hora', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
-        }
+
         
+        // Cria o token
+        $token = $this->createToken($user);
+
         // Cria a sessão
-        $createSession = $this->setSession($user);
+        $createSession = $this->setSession($user, $token);
         if (!$createSession){
             $this->session->setFlashdata(['alert' => 'Falha ao criar a sessão<br>Tente novamente', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
+            return redirect()->to('login');
         }
 
         // Limpa as tentativas de login se existir
         $clearAttempt = $this->deleteAttempt($user);
         $this->deleteAttempt($user);
         if ($this->checkSession()){
-            return redirect()->to(base_url('Home'));
+            return redirect()->to(base_url('Intro'));
         } else{
             $this->session->setFlashdata(['alert' => 'Falha ao criar a sessão<br>Tente novamente', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
+            return $this->login();
         }
-
     }
 
     //--------------------------------------------------------------------
@@ -156,22 +216,23 @@ class Auth extends Controller
      * @param $data
      * @return bool
      */
-    private function setSession($data)
+    private function setSession($data, $token='null')
     {
         // Defina aqui os dados do usuario que serão registrados na sessão
         $data = array(
             'id' => $data['id'],
             'name' => $data['name'],
             'email' => $data['email'],
-            'avatar' => $data['avatar']
+            'avatar' => $data['avatar'],
+            'token'=>$token
         );
         // Cria a sessão
         $this->session->set($data);
 
         // Verifica se a sessão foi criada
-        if ($this->checkSession()){
+        if ($this->checkSession()) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -216,7 +277,7 @@ class Auth extends Controller
     public function logout()
     {
         session_destroy();
-        return redirect()->to(base_url('Auth/login'));
+        return redirect()->to(base_url('auth/login'));
     }
 
     //--------------------------------------------------------------------
@@ -232,7 +293,7 @@ class Auth extends Controller
         if ($name == '' || $email == '' || $password == "" || $acept == false) {
             // Dados incorretos
             $this->session->setFlashdata(['alert' => 'Erro no preechimento dos dados', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/register'));
+            return redirect()->to(base_url('auth/register'));
         }
 
         /* pesquisa pelo email no banco */
@@ -242,7 +303,7 @@ class Auth extends Controller
         if ($result) {
             /* O email ja existe */
             $this->session->setFlashdata(['alert' => 'Erro o email já existe<br>Faça o login ou cadastre-se usando um e-mail diferente', 'alert-cls' => 'danger']);
-            return redirect()->to(base_url('Auth/login'));
+            return redirect()->to(base_url('auth/login'));
         } else {
             /* cria um novo usuario */
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -252,14 +313,15 @@ class Auth extends Controller
                 'email' => $email,
                 'password' => $hashPassword,
                 'state' => 0,
-                'activation_code' => $activationCode
+                'avatar' => 0,
+                'token' => $activationCode
             );
             $result = $this->userModel->save($data);
             if ($result) {
                 $sendEmail = $this->sendEmailSignup($email, $activationCode);
                 if ($sendEmail) {
                     $this->session->setFlashdata(['alert' => 'Sua conta foi criada com sucesso<br>Foi enviado um e-mail para ' . $email . ' com instruções para ativar sua conta', 'alert-cls' => 'success']);
-                    return redirect()->to(base_url('Auth/verify'));
+                    return redirect()->to(base_url('auth/verify'));
                 } else{
                     echo 'Falha ao enviar email';
                 }
@@ -366,10 +428,11 @@ class Auth extends Controller
         $user = $this->userModel->getByEmail($email);
         if ($user) {
             //echo 'Usuario encontrado '.$user['activation_code'];
-            if ($user['activation_code'] === $activationCode) {
+            if ($user['token'] === $activationCode) {
                 $data = array(
                     'id' => $user['id'],
-                    'state' => 1
+                    'state' => 1,
+                    'email_verified' => 1
                 );
                 $result = $this->userModel->save($data);
                 if ($result) {
@@ -384,5 +447,19 @@ class Auth extends Controller
                 return redirect()->to(base_url('Auth/verify'));
             }
         }
+    }
+
+    public function createToken(array $user) {
+        $key = Services::getSecretKey();
+
+        $payload = array(
+            'exp'=>(new \DateTime("now"))->getTimestamp(),
+            'uid'=>$user['id'],
+            'email'=>$user['email']
+        );
+        $token = JWT::encode($payload, $key,);
+
+        return $token;
+
     }
 }

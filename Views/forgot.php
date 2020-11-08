@@ -2,7 +2,7 @@
     <!-- Forgot Password -->
     <div class="login__block active" id="forget-password">
         <div class="login__block__header">
-            <img alt="App Logo" src="<?php echo base_url('assets/img/logo/LogoIcon01.png') ?>"/>
+            <img alt="App Logo" src="<?php echo base_url('src/assets/img/logo/LogoIcon01.png') ?>"/>
             <h4>
                 <span class="">Scada</span>
                 <span class="text-success">Unity</span>
@@ -15,15 +15,15 @@
                     <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/login') ?>">Login</a>
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/register') ?>">Criar uma
+                        <a class="dropdown-item" href="<?php echo base_url('auth/login') ?>">Login</a>
+                        <a class="dropdown-item" href="<?php echo base_url('auth/register') ?>">Criar uma
                             conta</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form method="post" action="<?php echo base_url('Auth/requestForgot') ?>">
+        <form method="post" action="<?php echo base_url('auth/requestForgot') ?>">
             <div class="login__block__body">
                 <p class="mb-5">Informe seu endereço de e-mail e enviaremos um e-mail com as instruções para a
                     recuperação da sua senha</p>

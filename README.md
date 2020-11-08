@@ -1,7 +1,7 @@
-# Auth
-- Infraestrutura de login segura para autenticar usuarios em seus aplicativos CODEIGNITER 4.
+# Scadaunity\Auth
+- Infraestrutura de autenticação leve e seguro para seus aplicativos criados com o framework CODEIGNITER 4.
 
-Esta biblioteca é um modulo de autenticação para projetos desenvolvidos com o framework Codeigniter 4
+A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua utilização em modo de produção e não nos responsabilizamos pelo uso desta biblioteca ainda em periodo de desenvolvimento.
 
 [![Build Status](https://travis-ci.org/doctrine/instantiator.svg?branch=master)](https://travis-ci.org/doctrine/instantiator)
 [![Code Coverage](https://scrutinizer-ci.com/g/doctrine/instantiator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/doctrine/instantiator/?branch=master)
@@ -9,29 +9,49 @@ Esta biblioteca é um modulo de autenticação para projetos desenvolvidos com o
 [![Latest Stable Version](https://poser.pugx.org/doctrine/instantiator/v/stable.png)](https://packagist.org/packages/doctrine/instantiator)
 [![Latest Unstable Version](https://poser.pugx.org/doctrine/instantiator/v/unstable.png)](https://packagist.org/packages/doctrine/instantiator)
 
-## Índice
-
+## Table of contents
+- [Quick start](#Quick start)
 - [Instalação](#Instalação)
 - [Configuração](#Configuração)
+-
+## Quick start
+Três opções estão disponiveis:
+ 
+- Composer (Indicado): 
+```
+composer require "scadaunity/auth"
+```
+- Clonar o repositório:
+
+``` 
+git clone https://github.com/scadaunity/auth.git
+```
+- [Download da versão mais recente.](https://github.com/scadaunity/auth/archive/master.zip)
 
 ## Instalação
+- Via composer
+```sh
+    composer require "scadaunity/Auth"
+```
 
-No download, você encontrará os seguintes diretórios e arquivos,
-- Faça o download do arquivo zip,
-- Crie uma pasta Modules dentro da pasta app,
-- Extraia o arquivo zip dentro da pasta Modules,
-- A estrutura de diretorios deverá estar conforme abaixo: 
+- Após a instalação via composer, você encontrará dentro da pasta vendor, os seguintes diretórios e arquivos, conforme abaixo: 
 
 ```sh
-app/
-└── Modules/
+Scadaunity/
     └── Auth/
+        ├── Config/
+        │   ├── Auth.php
+            └── Routes.php
         ├── Controllers/
+        │   ├── Admin.php
         │   └── Auth.php
+        ├── Database/
+        │   ├── Migrations/
+        │   │    └── 2020-05-06-034404_AuthTables.php
+        │   └── Seeds/
         ├── Models/
         │   ├── AttemptModel.php
-        │   ├── UserModel.php
-        │   └── VerifyModel.php
+        │   └── UserModel.php
         └── Views/
             ├── confirm-signup.php
             ├── forgot.php
@@ -41,7 +61,7 @@ app/
 
 ## Configuração
 
-Configurar o namespace Modules para que o autoload consiga trabalhar com o padrão HMVC.
+ #####1 Configurar o namespace.
 - abra app / Config / Autoload.php e adicione o namespace  Modules à psr4, conforme o exemplo abaixo.
 
 ```
@@ -49,7 +69,7 @@ $psr4 = [
     'App'           => APPPATH, // To ensure filters, etc still found,
     //APP_NAMESPACE => APPPATH, // For custom namespace
     'Config'        => APPPATH . 'Config',
-    'Modules'       => APPPATH . 'Modules', // HMVC
+    "Scadaunity\\Auth" => ROOTPATH. 'vendor/Scadaunity/Auth',
 ];
 ```
 

@@ -1,3 +1,4 @@
+<?php ?>
 <div class="login">
     <!-- Forgot Password -->
     <div class="login__block active" id="forget-password">
@@ -15,10 +16,10 @@
                     <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/login') ?>">Login</a>
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/forgot') ?>">Esqueci minha senha
+                        <a class="dropdown-item" href="<?php echo base_url('auth/login') ?>">Login</a>
+                        <a class="dropdown-item" href="<?php echo base_url('auth/forgot') ?>">Esqueci minha senha
                             ?</a>
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/register') ?>">Criar uma
+                        <a class="dropdown-item" href="<?php echo base_url('auth/register') ?>">Criar uma
                             conta</a>
                     </div>
                 </div>
@@ -26,12 +27,11 @@
 
         </div>
 
-        <form method="post" action="<?php echo base_url('Auth/activateAccount') ?>">
+        <form method="post" action="<?php echo base_url('auth/activateAccount') ?>">
             <div class="login__block__body">
 
                 <div class="form-group">
-                    <input type="email" class="form-control text-center" placeholder="* Confirme seu e-mail"
-                           autocomplete="username" name="email">
+                    <input type="hidden" name="email" value="<?php echo $user['email']?>">
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control text-center" placeholder="* Insira o codigo de 6 digitos"

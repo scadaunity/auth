@@ -2,7 +2,7 @@
     <!-- Register -->
     <div class="login__block active" id="register">
         <div class="login__block__header">
-            <img alt="App Logo" src="<?php echo base_url('assets/img/logo/LogoIcon01.png') ?>"/>
+            <img alt="App Logo" src="<?php echo base_url('src/assets/img/logo/LogoIcon01.png') ?>"/>
             <h4>
                 <span class="">Scada</span>
                 <span class="text-success">Unity</span>
@@ -15,15 +15,15 @@
                     <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/login') ?>">Login</a>
-                        <a class="dropdown-item" href="<?php echo base_url('Auth/forgot') ?>">Esqueci minha senha
+                        <a class="dropdown-item" href="<?php echo base_url('auth/login') ?>">Login</a>
+                        <a class="dropdown-item" href="<?php echo base_url('auth/forgot') ?>">Esqueci minha senha
                             ?</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form method="post" action="<?php echo base_url('Auth/create') ?>">
+        <form method="post" action="<?php echo base_url('auth/create') ?>">
             <div class="login__block__body">
                 <div class="form-group">
                     <input type="text" class="form-control text-center" placeholder="Nome" name="name">
