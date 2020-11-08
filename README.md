@@ -1,5 +1,5 @@
-# Scadaunity\Auth
-![Screenshot](https://forum.codeigniter.com/images/duende/logo.png) ![Screenshot](https://forum.codeigniter.com/images/duende/logo.png)
+# ![Screenshot](https://forum.codeigniter.com/images/duende/logo.png) Scadaunity\Auth
+ ![Screenshot](https://forum.codeigniter.com/images/duende/logo.png)
 
 - Infraestrutura de autenticação leve e seguro para seus aplicativos criados com o framework CODEIGNITER 4.
 
