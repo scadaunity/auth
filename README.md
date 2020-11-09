@@ -13,17 +13,19 @@ A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua 
 
 ## Tabela de conteúdo
 - [Instalação](#Instalação)
+- [Download](#Download)
 - [Configuração](#Configuração)
 
 ## Instalação
-- Via composer
+- Recomendamos a instalação através do [Composer.](https://getcomposer.org/)
 ```sh
 $    composer require scadaunity/auth
 ```
 
+## Download
 - [Download da versão mais recente.](https://github.com/scadaunity/auth/archive/master.zip)
 
-- Após a instalação via composer, você encontrará dentro da pasta vendor, os seguintes diretórios e arquivos, conforme abaixo: 
+- Após a instalação via composer, você encontrará dentro da pasta vendor, os seguintes diretórios e arquivos, conforme abaixo 
 
 ```sh
 Scadaunity/
