@@ -19,6 +19,8 @@ A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua 
 
 ## Pré Requisitos
 - [Composer.](https://getcomposer.org/)
+- [Configuração do banco de dados.](http://codeigniter.com/user_guide/database/configuration.html)
+- [Configuração para envio de email.](http://codeigniter.com/user_guide/libraries/email.html?highlight=mail)
 
 ## Instalação
 - Recomendamos a instalação através do [Composer.](https://getcomposer.org/)
