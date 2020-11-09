@@ -12,9 +12,13 @@ A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua 
 [![Latest Unstable Version](https://poser.pugx.org/doctrine/instantiator/v/unstable.png)](https://packagist.org/packages/doctrine/instantiator)
 
 ## Tabela de conteúdo
+- [Pré Requisitos](#PréRequisitos)
 - [Instalação](#Instalação)
 - [Download](#Download)
 - [Configuração](#Configuração)
+
+## Pré Requisitos
+- [Composer.](https://getcomposer.org/)
 
 ## Instalação
 - Recomendamos a instalação através do [Composer.](https://getcomposer.org/)
