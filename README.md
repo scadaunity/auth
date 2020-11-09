@@ -14,12 +14,11 @@ A biblioteca ainda se encontra em fase de desenvolvimento não recomendamos sua 
 ## Tabela de conteúdo
 - [Instalação](#Instalação)
 - [Configuração](#Configuração)
--
 
 ## Instalação
 - Via composer
 ```sh
-    composer require "scadaunity/auth"
+$    composer require scadaunity/auth
 ```
 
 - [Download da versão mais recente.](https://github.com/scadaunity/auth/archive/master.zip)
