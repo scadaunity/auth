@@ -111,7 +111,8 @@ class Auth extends BaseController
     //--------------------------------------------------------------------
     public function verify(array $user = null)
     {
-        if ($user == null) {
+        if ($user == null) 
+        {
             $this->session->setFlashdata(['alert' => 'Dados invalidos', 'alert-cls' => 'danger']);
             return $this->login();
         }
@@ -138,19 +139,22 @@ class Auth extends BaseController
 
         /** Procura usuario */
         $user = $this->userModel->getByEmail($email);
-        if (!is_array($user)) {
+        if (!is_array($user)) 
+        {
             $this->session->setFlashdata(['alert' => 'Login invalido', 'alert-cls' => 'danger']);
             return redirect()->to('login');
         }
 
         /** Email verificado */
-        if ($user['email_verified'] == 0) {
+        if ($user['email_verified'] == 0) 
+        {
             $this->session->setFlashdata(['alert' => 'Verifique sua caixa de email para <bold>ativar sua conta</bold>', 'alert-cls' => 'danger']);
             return $this->verify($user);
         }
 
         /** Verifica o estado da conta */
-        if ($user['state'] == 0) {
+        if ($user['state'] == 0) 
+        {
             $this->session->setFlashdata(['alert' => 'Sua Conta esta suspensa, entre em contato com o administrador', 'alert-cls' => 'danger']);
             return redirect()->to('login');
         }
