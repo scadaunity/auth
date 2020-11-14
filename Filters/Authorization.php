@@ -30,4 +30,5 @@ class Authorization implements FilterInterface
     {
         // Do something here
     }
+
 }
